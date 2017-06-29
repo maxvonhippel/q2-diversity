@@ -17,16 +17,17 @@ export function render(svg, data) {
 
   const { xAxisLabel, yAxisLabel, minX, maxX, minY, maxY } = data;
 
-  const pad = (maxX - minX) * 0.03;
-  // const dig = Math.max(minX % 1, maxX % 1);
-  // if (dig === 0) {
-  //   pad = Math.round(pad);
-  // }
-  const x = scaleLinear().domain([minX - pad, maxX + pad]).range([0, width]).nice();
-  const y = scaleLinear().domain([minY, maxY]).range([height, 0]).nice();
-
   const xAxis = axisBottom();
   const yAxis = axisLeft();
+
+  let pad = (maxX - minX) * 0.03;
+  if (minX % 1 === 0 && maxX % 1 === 0) {
+    pad = Math.max(Math.round(pad), 1);
+    const between = Math.max(3, Math.round((maxX - minX) + (2 * pad)));
+    xAxis.ticks(between, 'd');
+  }
+  const x = scaleLinear().domain([minX - pad, maxX + pad]).range([0, width]).nice();
+  const y = scaleLinear().domain([minY, maxY]).range([height, 0]).nice();
 
   xAxis.scale(x);
   yAxis.scale(y);
