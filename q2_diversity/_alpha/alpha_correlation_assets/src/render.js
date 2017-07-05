@@ -23,12 +23,8 @@ export function render(svg, data) {
   let pad = (maxX - minX) * 0.03;
   if (minX % 1 === 0 && maxX % 1 === 0) {
     pad = Math.max(Math.round(pad), 1);
-<<<<<<< HEAD
     let between = Math.max(3, Math.round((maxX - minX) + (2 * pad)));
     between = Math.min(between, 12);
-=======
-    const between = Math.max(3, Math.round((maxX - minX) + (2 * pad)));
->>>>>>> b2dcedf7a8a859635e4c6ba4c8b41fccd5b9c1d0
     xAxis.ticks(between, 'd');
   }
   const x = scaleLinear().domain([minX - pad, maxX + pad]).range([0, width]).nice();
