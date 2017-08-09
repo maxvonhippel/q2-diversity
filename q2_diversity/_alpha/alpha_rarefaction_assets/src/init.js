@@ -34,15 +34,23 @@ export default function init() {
     .append('table')
     .attr('class', 'table table-hover table-bordered')
     .style('margin-bottom', '10px');
-  table.append('thead')
-    .append('tr')
-      .attr('class', 'tableHead')
-      .selectAll('th')
-          .data([['Percentile', 2], ['Metric', 2]])
-        .enter()
-          .append('th')
-          .text(d => d[0])
-          .attr('class', d => `col-xs-${d[1]}`);
+  const tableHead = table.append('thead');
+  const selectedRow = tableHead.append('tr');
+  selectedRow.append('th')
+    .attr('class', 'col-xs-2 tableSelected')
+    .text('Selected: None');
+  selectedRow.append('th')
+    .attr('class', 'col-xs-2 tableDepth')
+    .text('Depth: None');
+
+  tableHead.append('tr')
+    .attr('class', 'tableHead')
+    .selectAll('th')
+        .data([['Percentile', 2], ['Metric', 2]])
+      .enter()
+        .append('th')
+        .text(d => d[0])
+        .attr('class', d => `col-xs-${d[1]}`);
   const initialData = [
     ['2nd', '...'],
     ['9th', '...'],

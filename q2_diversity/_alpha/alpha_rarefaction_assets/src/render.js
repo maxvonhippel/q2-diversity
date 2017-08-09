@@ -15,7 +15,6 @@ import { curData, appendSeries, toggle } from './data';
 
 function resetTable(data) {
   const tableHead = select('.tableHead');
-  tableHead.style('background-color', 'white');
   const tableMetricHead = tableHead.selectAll('th')._groups[0][1];
   select(tableMetricHead).text(data.yAxisLabel);
   select('.tableBody')
@@ -32,7 +31,8 @@ function resetTable(data) {
       .selectAll('td')
         .data(e => e)
         .text(e => e);
-  return tableHead;
+  select('.tableSelected').text('Selected: None');
+  select('.tableDepth').text('Depth: None');
 }
 
 // re-render chart and legend whenever selection changes
@@ -69,7 +69,7 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   // this way there is no extra scroll space in the list
   legend.attr('height', arrGroups.length * 20);
 
-  const tableHead = resetTable(data);
+  resetTable(data);
 
   let ly = 0;
   const all = 'Select%20All';
@@ -108,8 +108,8 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
               .selectAll('td')
               .data(e => e)
               .text(e => e);
-          tableHead.style('background-color',
-            `${color(d[groupIndex])}`);
+          select('.tableSelected').text(`Selected: ${d[groupIndex]}`);
+          select('.tableDepth').text(`Depth: ${d[depthIndex]}`);
         }
       });
   }
