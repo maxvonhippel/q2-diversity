@@ -54,10 +54,10 @@ export default function appendLegendKey(legend, entry, ly, color) {
   });
   // text for key in the legend
   legend.append('text')
-      .attr('class', 'legend')
-      .attr('x', 40)
-      .attr('y', ly + 5)
-      .style('font', '8px sans-serif')
-      .text(decodeURI(entry));
+    .attr('class', 'legend')
+    .attr('x', 40)
+    .attr('y', ly + 5)
+    .style('font', '8px sans-serif')
+    .text(decodeURI(entry));
 }
 

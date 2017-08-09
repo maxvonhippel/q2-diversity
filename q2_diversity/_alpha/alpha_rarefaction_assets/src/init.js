@@ -15,25 +15,25 @@ export default function init() {
   const controlsRow = body.insert('div', ':first-child').attr('class', 'viz row');
   // whin the table row we have a table
   const tableCol = tableRow.append('div')
-                    .attr('class', 'col-xs-12 tableCol')
-                    .style('width', '1000px')
-                    .style('margin-top', '20px');
+    .attr('class', 'col-xs-12 tableCol')
+    .style('width', '1000px')
+    .style('margin-top', '20px');
   // within controls row we have controls
   const controlsDiv = controlsRow.append('div')
-                      .attr('class', 'col-lg-12');
+    .attr('class', 'col-lg-12');
   // within plot row we have plot and legend
   const plotCol = plotRow.append('div')
-                    .attr('class', 'col-lg-9')
-                    .style('width', '1120px');
+    .attr('class', 'col-lg-9')
+    .style('width', '1120px');
   const legendCol = plotRow.append('div')
-                      .style('height', '470px')
-                      .attr('class', 'col-lg-2');
+    .style('height', '470px')
+    .attr('class', 'col-lg-2');
   // within tableCol we have a table
   const table = tableCol.append('div')
-                  .attr('class', 'stats')
-                  .append('table')
-                    .attr('class', 'table table-hover table-bordered')
-                    .style('margin-bottom', '0');
+    .attr('class', 'stats')
+    .append('table')
+    .attr('class', 'table table-hover table-bordered')
+    .style('margin-bottom', '10px');
   table.append('thead')
     .append('tr')
     .selectAll('th')
@@ -53,6 +53,7 @@ export default function init() {
   ];
   const rows = table
     .append('tbody')
+      .attr('class', 'tableBody')
       .selectAll('tr')
       .data(initialData)
     .enter()
@@ -75,25 +76,25 @@ export default function init() {
   chart.append('text').attr('class', 'y label');
   // within legendCol we have legend title and legend box
   const legendTitle = legendCol.append('div')
-                        .style('height', '25px')
-                        .style('width', '300px')
-                        .style('overflow-y', 'hidden')
-                        .style('overflow-x', 'auto')
-                        .append('svg')
-                          .attr('viewBox', '0 0 200 20')
-                          .attr('class', 'legendTitleSvg')
-                          .append('g')
-                            .attr('class', 'legendTitle');
+    .style('height', '25px')
+    .style('width', '300px')
+    .style('overflow-y', 'hidden')
+    .style('overflow-x', 'auto')
+    .append('svg')
+      .attr('viewBox', '0 0 200 20')
+      .attr('class', 'legendTitleSvg')
+      .append('g')
+        .attr('class', 'legendTitle');
   const legendBox = legendCol.append('div')
-                    .style('height', '445px')
-                    .style('width', '300px')
-                    .style('overflow-y', 'scroll')
-                    .style('overflow-x', 'auto')
-                    .attr('class', 'legendBoxDiv')
-                    .append('svg')
-                      .attr('viewBox', '0 0 300 445')
-                      .attr('class', 'legendBoxSvg')
-                      .append('g');
+    .style('height', '445px')
+    .style('width', '300px')
+    .style('overflow-y', 'scroll')
+    .style('overflow-x', 'auto')
+    .attr('class', 'legendBoxDiv')
+    .append('svg')
+      .attr('viewBox', '0 0 300 445')
+      .attr('class', 'legendBoxSvg')
+      .append('g');
   body.insert('h1', ':first-child').text('Alpha Rarefaction');
   // D3
   state.initialize(metric, category, controlsDiv, plotSvg, legendBox, legendTitle);

@@ -50,13 +50,45 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   }
   // DOTS
   function plotDots(selection) {
-    selection.transition()
-      .attr('class', d => `circle ${d[groupIndex]}`)
+    const dots = selection.attr('class', d => `circle ${d[groupIndex]}`)
       .attr('fill', d => color(d[groupIndex]))
       .attr('opacity', d => curData[d[groupIndex]].dotsOpacity)
       .attr('stroke', d => color(d[groupIndex]))
       .attr('cx', d => x(d[depthIndex]))
       .attr('cy', d => y(d[medianIndex]));
+    dots.transition();
+    dots.on('mouseover', (d) => {
+      select('.tableBody')
+      .selectAll('tr')
+        .data([
+          ['(Not shown in box plot)', '2nd', '2nd'],
+          ['Lower Whisker', '9th', '9th'],
+          ['Bottom of Box', '25th', '25th'],
+          ['Middle of Box', '50th (Median)', d[medianIndex]],
+          ['Top of Box', '75th', '75th'],
+          ['Upper Whisker', '91st', '91st'],
+          ['(Not shown in box plot)', '98th', '98th'],
+        ])
+        .selectAll('td')
+        .data(e => e)
+        .text(e => e);
+    })
+    .on('mouseout', () => {
+      select('.tableBody')
+      .selectAll('tr')
+        .data([
+          ['(Not shown in box plot)', '2nd', '...'],
+          ['Lower Whisker', '9th', '...'],
+          ['Bottom of Box', '25th', '...'],
+          ['Middle of Box', '50th (Median)', '...'],
+          ['Top of Box', '75th', '...'],
+          ['Upper Whisker', '91st', '...'],
+          ['(Not shown in box plot)', '98th', '...'],
+        ])
+        .selectAll('td')
+        .data(e => e)
+        .text(e => e);
+    });
   }
   const dotsUpdate = chart.selectAll('.circle').data(points);
   dotsUpdate.exit().transition().remove();
