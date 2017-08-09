@@ -14,9 +14,13 @@ export default function init() {
   const plotRow = body.insert('div', ':first-child').attr('class', 'viz row');
   const controlsRow = body.insert('div', ':first-child').attr('class', 'viz row');
   // whin the table row we have a table
-  const tableCol = tableRow.append('div').attr('class', 'col-xs-12');
+  const tableCol = tableRow.append('div')
+                    .attr('class', 'col-xs-12 tableCol')
+                    .style('width', '1000px')
+                    .style('margin-top', '20px');
   // within controls row we have controls
-  const controlsDiv = controlsRow.append('div').attr('class', 'col-lg-12');
+  const controlsDiv = controlsRow.append('div')
+                      .attr('class', 'col-lg-12');
   // within plot row we have plot and legend
   const plotCol = plotRow.append('div')
                     .attr('class', 'col-lg-9')
@@ -26,12 +30,10 @@ export default function init() {
                       .attr('class', 'col-lg-2');
   // within tableCol we have a table
   const table = tableCol.append('div')
-                  .attr('class', 'panel panel-default')
-                  .append('div')
-                    .attr('class', 'stats')
-                    .append('table')
-                      .attr('class', 'table')
-                      .style('margin-bottom', '0');
+                  .attr('class', 'stats')
+                  .append('table')
+                    .attr('class', 'table table-hover table-bordered')
+                    .style('margin-bottom', '0');
   table.append('thead')
     .append('tr')
     .selectAll('th')

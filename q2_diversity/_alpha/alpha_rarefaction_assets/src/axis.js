@@ -23,7 +23,6 @@ export function setupYLabel(svg, height, label, yAxis) {
     .style('font', '12px sans-serif')
     .text(label);
   const all = Array.from(a.selectAll('text')._groups[0]).map(d => d.getComputedTextLength());
-  console.log('all: ', all, ' max(all): ', max(all));
   const textHeight = max(all) + 20;
   l.attr('transform', `translate(-${textHeight},${(height / 2)})rotate(-90)`);
   return textHeight;

@@ -114,15 +114,11 @@ export default function render(svg, data, category, legend, legendTitle) {
   setupXLabel(svg, width, height, xAxisLabel, xAxis);
   const maxLabelY = setupYLabel(svg, height, yAxisLabel, yAxis);
   const moveX = Math.max(margin.left, maxLabelY);
-  // log
-  console.log('moveX: ', moveX,
-    ' margin left: ', margin.left,
-    ' maxLabelY: ', maxLabelY);
-  // log
   svg.attr('width', width + moveX + margin.right)
     .attr('height', height + margin.bottom + margin.top);
   select(svg.node().parentNode).style('width', `${width + moveX + margin.right}px`)
     .style('height', `${height + margin.bottom + margin.top}px`);
   chart.attr('transform', `translate(${moveX},${margin.top})`);
+  select('.tableCol').style('margin-left', `${moveX}px`);
   renderPlot(svg, data, x, y, category, legend, legendTitle);
 }
