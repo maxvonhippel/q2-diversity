@@ -13,11 +13,34 @@ import { setupXLabel, setupYLabel } from './axis';
 import appendLegendKey from './legend';
 import { curData, appendSeries, toggle } from './data';
 
+function resetTable(data) {
+  const tableHead = select('.tableHead');
+  tableHead.style('background-color', 'white');
+  const tableMetricHead = tableHead.selectAll('th')._groups[0][1];
+  select(tableMetricHead).text(data.yAxisLabel);
+  select('.tableBody')
+    .selectAll('tr')
+      .data([
+        ['2nd', '...'],
+        ['9th', '...'],
+        ['25th', '...'],
+        ['50th (Median)', '...'],
+        ['75th', '...'],
+        ['91st', '...'],
+        ['98th', '...'],
+      ])
+      .selectAll('td')
+        .data(e => e)
+        .text(e => e);
+  return tableHead;
+}
+
 // re-render chart and legend whenever selection changes
 function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   const chart = svg.select('g');
   const legendBox = select(legend.node().parentNode);
 
+  // find the indices of components
   const depthIndex = data.data.columns.indexOf('depth');
   const firstIndex = data.data.columns.indexOf('2');
   const secondIndex = data.data.columns.indexOf('9');
@@ -30,15 +53,23 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   if (groupIndex === -1) {
     groupIndex = data.data.columns.indexOf(category);
   }
+
+  // determine data to parse
   const points = [data.data.data][0];
   const setGroups = new Set(Array.from(points, d => d[groupIndex]));
   const color = scaleOrdinal(schemeCategory20)
     .domain(setGroups);
   const arrGroups = Array.from(setGroups);
 
+  // legend is not yet d3-esque, unfortunately, hence
+  // the necessity of the remove() calls
   legend.selectAll('.legend').remove();
   legendTitle.selectAll('.legend').remove();
+  // resize the legend to accomodate all of the keys
+  // this way there is no extra scroll space in the list
   legend.attr('height', arrGroups.length * 20);
+
+  const tableHead = resetTable(data);
 
   let ly = 0;
   const all = 'Select%20All';
@@ -64,8 +95,7 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
       .attr('cy', d => y(d[fourthIndex]))
       .on('mouseover', (d) => {
         if (curData[d[groupIndex]].dotsOpacity === 1) {
-          select('.tableBody')
-            .selectAll('tr')
+          select('.tableBody').selectAll('tr')
               .data([
                 ['2nd', d[firstIndex]],
                 ['9th', d[secondIndex]],
@@ -78,6 +108,8 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
               .selectAll('td')
               .data(e => e)
               .text(e => e);
+          tableHead.style('background-color',
+            `${color(d[groupIndex])}`);
         }
       });
   }
@@ -107,9 +139,6 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
     .attr('stroke', d => color(d.key))
     .attr('opacity', d => curData[d.key].lineOpacity)
     .attr('d', d => valueline(d.values));
-  //
-  console.log('selecting: ', select(select('.tableHead').selectAll('th')._groups[0][1]));
-  select(select('.tableHead').selectAll('th')._groups[0][1]).text(data.yAxisLabel);
 }
 
 // re-render chart edges, exis, formatting, etc. when selection changes
@@ -130,10 +159,8 @@ export default function render(svg, data, category, legend, legendTitle) {
     const between = Math.max(3, (maxX - minX) + (2 * pad));
     xAxis.ticks(Math.min(between, 12), 'd');
   }
-
   const x = scaleLinear().domain([minX - pad, maxX + pad]).range([0, width]).nice();
   const y = scaleLinear().domain([minY, maxY]).range([height, 0]).nice();
-
   xAxis.scale(x);
   yAxis.scale(y);
 

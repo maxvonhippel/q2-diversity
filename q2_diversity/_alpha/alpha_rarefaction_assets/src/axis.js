@@ -10,7 +10,7 @@ export function setupXLabel(svg, width, height, label, xAxis) {
     .attr('text-anchor', 'middle')
     .style('font', '12px sans-serif')
     .text(label)
-    .attr('transform', `translate(${(width / 2)},${(height + 30)})`);
+    .attr('transform', `translate(${(width / 2)},${(height + 40)})`);
 }
 
 export function setupYLabel(svg, height, label, yAxis) {
