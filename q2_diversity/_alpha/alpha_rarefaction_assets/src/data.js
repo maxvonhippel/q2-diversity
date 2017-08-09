@@ -7,8 +7,8 @@ export function setupData(data, metric) {
   let minY = Infinity;
   let maxY = 0;
   const depthIndex = data.columns.indexOf('depth');
-  const minIndex = data.columns.indexOf('min');
-  const maxIndex = data.columns.indexOf('max');
+  const minIndex = data.columns.indexOf('2');
+  const maxIndex = data.columns.indexOf('98');
   data.data.forEach((d) => {
     const x = d[depthIndex];
     if (x < minX) minX = x;

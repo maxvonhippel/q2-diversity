@@ -19,7 +19,13 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   const legendBox = select(legend.node().parentNode);
 
   const depthIndex = data.data.columns.indexOf('depth');
-  const medianIndex = data.data.columns.indexOf('median');
+  const firstIndex = data.data.columns.indexOf('2');
+  const secondIndex = data.data.columns.indexOf('9');
+  const thirdIndex = data.data.columns.indexOf('25');
+  const fourthIndex = data.data.columns.indexOf('50');
+  const fifthIndex = data.data.columns.indexOf('75');
+  const sixthIndex = data.data.columns.indexOf('91');
+  const seventIndex = data.data.columns.indexOf('98');
   let groupIndex = data.data.columns.indexOf('sample-id');
   if (groupIndex === -1) {
     groupIndex = data.data.columns.indexOf(category);
@@ -50,45 +56,30 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   }
   // DOTS
   function plotDots(selection) {
-    const dots = selection.attr('class', d => `circle ${d[groupIndex]}`)
+    selection.attr('class', d => `circle ${d[groupIndex]}`)
       .attr('fill', d => color(d[groupIndex]))
       .attr('opacity', d => curData[d[groupIndex]].dotsOpacity)
       .attr('stroke', d => color(d[groupIndex]))
       .attr('cx', d => x(d[depthIndex]))
-      .attr('cy', d => y(d[medianIndex]));
-    dots.transition();
-    dots.on('mouseover', (d) => {
-      select('.tableBody')
-      .selectAll('tr')
-        .data([
-          ['(Not shown in box plot)', '2nd', '2nd'],
-          ['Lower Whisker', '9th', '9th'],
-          ['Bottom of Box', '25th', '25th'],
-          ['Middle of Box', '50th (Median)', d[medianIndex]],
-          ['Top of Box', '75th', '75th'],
-          ['Upper Whisker', '91st', '91st'],
-          ['(Not shown in box plot)', '98th', '98th'],
-        ])
-        .selectAll('td')
-        .data(e => e)
-        .text(e => e);
-    })
-    .on('mouseout', () => {
-      select('.tableBody')
-      .selectAll('tr')
-        .data([
-          ['(Not shown in box plot)', '2nd', '...'],
-          ['Lower Whisker', '9th', '...'],
-          ['Bottom of Box', '25th', '...'],
-          ['Middle of Box', '50th (Median)', '...'],
-          ['Top of Box', '75th', '...'],
-          ['Upper Whisker', '91st', '...'],
-          ['(Not shown in box plot)', '98th', '...'],
-        ])
-        .selectAll('td')
-        .data(e => e)
-        .text(e => e);
-    });
+      .attr('cy', d => y(d[fourthIndex]))
+      .on('mouseover', (d) => {
+        if (curData[d[groupIndex]].dotsOpacity === 1) {
+          select('.tableBody')
+            .selectAll('tr')
+              .data([
+                ['2nd', d[firstIndex]],
+                ['9th', d[secondIndex]],
+                ['25th', d[thirdIndex]],
+                ['50th (Median)', d[fourthIndex]],
+                ['75th', d[fifthIndex]],
+                ['91st', d[sixthIndex]],
+                ['98th', d[seventIndex]],
+              ])
+              .selectAll('td')
+              .data(e => e)
+              .text(e => e);
+        }
+      });
   }
   const dotsUpdate = chart.selectAll('.circle').data(points);
   dotsUpdate.exit().transition().remove();
@@ -100,7 +91,7 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   // LINES
   const valueline = line()
     .x(d => x(d[depthIndex]))
-    .y(d => y(d[medianIndex]));
+    .y(d => y(d[fourthIndex]));
   const datum = nest()
     .key(d => d[groupIndex])
     .entries(points);
@@ -116,6 +107,9 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
     .attr('stroke', d => color(d.key))
     .attr('opacity', d => curData[d.key].lineOpacity)
     .attr('d', d => valueline(d.values));
+  //
+  console.log('selecting: ', select(select('.tableHead').selectAll('th')._groups[0][1]));
+  select(select('.tableHead').selectAll('th')._groups[0][1]).text(data.yAxisLabel);
 }
 
 // re-render chart edges, exis, formatting, etc. when selection changes
@@ -151,6 +145,6 @@ export default function render(svg, data, category, legend, legendTitle) {
   select(svg.node().parentNode).style('width', `${width + moveX + margin.right}px`)
     .style('height', `${height + margin.bottom + margin.top}px`);
   chart.attr('transform', `translate(${moveX},${margin.top})`);
-  select('.tableCol').style('margin-left', `${moveX}px`);
+  select('.tableCol').style('margin-left', `${moveX + 10}px`);
   renderPlot(svg, data, x, y, category, legend, legendTitle);
 }

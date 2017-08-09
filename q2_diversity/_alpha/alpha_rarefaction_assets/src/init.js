@@ -16,7 +16,7 @@ export default function init() {
   // whin the table row we have a table
   const tableCol = tableRow.append('div')
     .attr('class', 'col-xs-12 tableCol')
-    .style('width', '1000px')
+    .style('max-width', '1000px')
     .style('margin-top', '20px');
   // within controls row we have controls
   const controlsDiv = controlsRow.append('div')
@@ -36,20 +36,21 @@ export default function init() {
     .style('margin-bottom', '10px');
   table.append('thead')
     .append('tr')
-    .selectAll('th')
-      .data([['Box plot feature', 5], ['Percentile', 5], ['Quality score', 2]])
-    .enter()
-      .append('th')
-        .text(d => d[0])
-        .attr('class', d => `col-xs-${d[1]}`);
+      .attr('class', 'tableHead')
+      .selectAll('th')
+          .data([['Percentile', 2], ['Metric', 2]])
+        .enter()
+          .append('th')
+          .text(d => d[0])
+          .attr('class', d => `col-xs-${d[1]}`);
   const initialData = [
-    ['(Not shown in box plot)', '2nd', '...'],
-    ['Lower Whisker', '9th', '...'],
-    ['Bottom of Box', '25th', '...'],
-    ['Middle of Box', '50th (Median)', '...'],
-    ['Top of Box', '75th', '...'],
-    ['Upper Whisker', '91st', '...'],
-    ['(Not shown in box plot)', '98th', '...'],
+    ['2nd', '...'],
+    ['9th', '...'],
+    ['25th', '...'],
+    ['50th (Median)', '...'],
+    ['75th', '...'],
+    ['91st', '...'],
+    ['98th', '...'],
   ];
   const rows = table
     .append('tbody')
