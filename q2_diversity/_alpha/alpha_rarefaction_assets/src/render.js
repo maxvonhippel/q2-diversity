@@ -18,33 +18,20 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   const chart = svg.select('g');
   const legendBox = select(legend.node().parentNode);
 
-  // find the indices of components
   const depthIndex = data.data.columns.indexOf('depth');
-  // const firstIndex = data.data.columns.indexOf('2');
-  // const secondIndex = data.data.columns.indexOf('9');
-  // const thirdIndex = data.data.columns.indexOf('25');
-  const fourthIndex = data.data.columns.indexOf('50');
-  // const fifthIndex = data.data.columns.indexOf('75');
-  // const sixthIndex = data.data.columns.indexOf('91');
-  // const seventhIndex = data.data.columns.indexOf('98');
+  const medianIndex = data.data.columns.indexOf('median');
   let groupIndex = data.data.columns.indexOf('sample-id');
   if (groupIndex === -1) {
     groupIndex = data.data.columns.indexOf(category);
   }
-
-  // determine data to parse
   const points = [data.data.data][0];
   const setGroups = new Set(Array.from(points, d => d[groupIndex]));
   const color = scaleOrdinal(schemeCategory20)
     .domain(setGroups);
   const arrGroups = Array.from(setGroups);
 
-  // legend is not yet d3-esque, unfortunately, hence
-  // the necessity of the remove() calls
   legend.selectAll('.legend').remove();
   legendTitle.selectAll('.legend').remove();
-  // resize the legend to accomodate all of the keys
-  // this way there is no extra scroll space in the list
   legend.attr('height', arrGroups.length * 20);
 
   let ly = 0;
@@ -63,12 +50,13 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   }
   // DOTS
   function plotDots(selection) {
-    selection.attr('class', d => `circle ${d[groupIndex]}`)
+    selection.transition()
+      .attr('class', d => `circle ${d[groupIndex]}`)
       .attr('fill', d => color(d[groupIndex]))
       .attr('opacity', d => curData[d[groupIndex]].dotsOpacity)
       .attr('stroke', d => color(d[groupIndex]))
       .attr('cx', d => x(d[depthIndex]))
-      .attr('cy', d => y(d[fourthIndex]));
+      .attr('cy', d => y(d[medianIndex]));
   }
   const dotsUpdate = chart.selectAll('.circle').data(points);
   dotsUpdate.exit().transition().remove();
@@ -80,7 +68,7 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   // LINES
   const valueline = line()
     .x(d => x(d[depthIndex]))
-    .y(d => y(d[fourthIndex]));
+    .y(d => y(d[medianIndex]));
   const datum = nest()
     .key(d => d[groupIndex])
     .entries(points);
@@ -116,14 +104,21 @@ export default function render(svg, data, category, legend, legendTitle) {
     const between = Math.max(3, (maxX - minX) + (2 * pad));
     xAxis.ticks(Math.min(between, 12), 'd');
   }
+
   const x = scaleLinear().domain([minX - pad, maxX + pad]).range([0, width]).nice();
   const y = scaleLinear().domain([minY, maxY]).range([height, 0]).nice();
+
   xAxis.scale(x);
   yAxis.scale(y);
 
   setupXLabel(svg, width, height, xAxisLabel, xAxis);
   const maxLabelY = setupYLabel(svg, height, yAxisLabel, yAxis);
   const moveX = Math.max(margin.left, maxLabelY);
+  // log
+  console.log('moveX: ', moveX,
+    ' margin left: ', margin.left,
+    ' maxLabelY: ', maxLabelY);
+  // log
   svg.attr('width', width + moveX + margin.right)
     .attr('height', height + margin.bottom + margin.top);
   select(svg.node().parentNode).style('width', `${width + moveX + margin.right}px`)

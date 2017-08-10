@@ -201,14 +201,11 @@ def alpha_correlation(output_dir: str,
 
 def get_stats(group):
     try:
-        return {'2': group.quantile(q=0.02),
-                '9': group.quantile(q=0.09),
-                '25': group.quantile(q=0.25),
-                '50': group.quantile(q=0.5),
-                '75': group.quantile(q=0.75),
-                '91': group.quantile(q=0.91),
-                '98': group.quantile(q=0.98),
-                'n': group.size()}
+        return {'min': group.min(),
+                'tf': group.quantile(q=0.25),
+                'median': group.median(),
+                'sf': group.quantile(q=0.75),
+                'max': group.max()}
     except:
         # NOTE: THIS IS A PROBLEM WITH CONFIDENCE RANGES, WHICH MAY ALSO
         # BE A PROBLEM IN OTHER METHODS & VISUALIZERS.  THIS NEEDS TO BE
