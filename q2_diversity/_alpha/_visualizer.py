@@ -207,7 +207,8 @@ def get_stats(group):
                 '50': group.quantile(q=0.5),
                 '75': group.quantile(q=0.75),
                 '91': group.quantile(q=0.91),
-                '98': group.quantile(q=0.98)}
+                '98': group.quantile(q=0.98),
+                'n': group.size()}
     except:
         # NOTE: THIS IS A PROBLEM WITH CONFIDENCE RANGES, WHICH MAY ALSO
         # BE A PROBLEM IN OTHER METHODS & VISUALIZERS.  THIS NEEDS TO BE

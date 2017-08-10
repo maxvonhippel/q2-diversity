@@ -13,28 +13,6 @@ import { setupXLabel, setupYLabel } from './axis';
 import appendLegendKey from './legend';
 import { curData, appendSeries, toggle } from './data';
 
-function resetTable(data) {
-  const tableHead = select('.tableHead');
-  const tableMetricHead = tableHead.selectAll('th')._groups[0][1];
-  select(tableMetricHead).text(data.yAxisLabel);
-  select('.tableBody')
-    .selectAll('tr')
-      .data([
-        ['2nd', '...'],
-        ['9th', '...'],
-        ['25th', '...'],
-        ['50th (Median)', '...'],
-        ['75th', '...'],
-        ['91st', '...'],
-        ['98th', '...'],
-      ])
-      .selectAll('td')
-        .data(e => e)
-        .text(e => e);
-  select('.tableSelected').text('Selected: None');
-  select('.tableDepth').text('Depth: None');
-}
-
 // re-render chart and legend whenever selection changes
 function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   const chart = svg.select('g');
@@ -42,13 +20,13 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
 
   // find the indices of components
   const depthIndex = data.data.columns.indexOf('depth');
-  const firstIndex = data.data.columns.indexOf('2');
-  const secondIndex = data.data.columns.indexOf('9');
-  const thirdIndex = data.data.columns.indexOf('25');
+  // const firstIndex = data.data.columns.indexOf('2');
+  // const secondIndex = data.data.columns.indexOf('9');
+  // const thirdIndex = data.data.columns.indexOf('25');
   const fourthIndex = data.data.columns.indexOf('50');
-  const fifthIndex = data.data.columns.indexOf('75');
-  const sixthIndex = data.data.columns.indexOf('91');
-  const seventIndex = data.data.columns.indexOf('98');
+  // const fifthIndex = data.data.columns.indexOf('75');
+  // const sixthIndex = data.data.columns.indexOf('91');
+  // const seventhIndex = data.data.columns.indexOf('98');
   let groupIndex = data.data.columns.indexOf('sample-id');
   if (groupIndex === -1) {
     groupIndex = data.data.columns.indexOf(category);
@@ -68,8 +46,6 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
   // resize the legend to accomodate all of the keys
   // this way there is no extra scroll space in the list
   legend.attr('height', arrGroups.length * 20);
-
-  resetTable(data);
 
   let ly = 0;
   const all = 'Select%20All';
@@ -92,26 +68,7 @@ function renderPlot(svg, data, x, y, category, legend, legendTitle) {
       .attr('opacity', d => curData[d[groupIndex]].dotsOpacity)
       .attr('stroke', d => color(d[groupIndex]))
       .attr('cx', d => x(d[depthIndex]))
-      .attr('cy', d => y(d[fourthIndex]))
-      .on('mouseover', (d) => {
-        if (curData[d[groupIndex]].dotsOpacity === 1) {
-          select('.tableBody').selectAll('tr')
-              .data([
-                ['2nd', d[firstIndex]],
-                ['9th', d[secondIndex]],
-                ['25th', d[thirdIndex]],
-                ['50th (Median)', d[fourthIndex]],
-                ['75th', d[fifthIndex]],
-                ['91st', d[sixthIndex]],
-                ['98th', d[seventIndex]],
-              ])
-              .selectAll('td')
-              .data(e => e)
-              .text(e => e);
-          select('.tableSelected').text(`Selected: ${d[groupIndex]}`);
-          select('.tableDepth').text(`Depth: ${d[depthIndex]}`);
-        }
-      });
+      .attr('cy', d => y(d[fourthIndex]));
   }
   const dotsUpdate = chart.selectAll('.circle').data(points);
   dotsUpdate.exit().transition().remove();
@@ -172,6 +129,5 @@ export default function render(svg, data, category, legend, legendTitle) {
   select(svg.node().parentNode).style('width', `${width + moveX + margin.right}px`)
     .style('height', `${height + margin.bottom + margin.top}px`);
   chart.attr('transform', `translate(${moveX},${margin.top})`);
-  select('.tableCol').style('margin-left', `${moveX + 10}px`);
   renderPlot(svg, data, x, y, category, legend, legendTitle);
 }

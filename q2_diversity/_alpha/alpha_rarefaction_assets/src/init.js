@@ -10,14 +10,8 @@ export default function init() {
   // body
   const body = select('#main');
   // controls row, plot row. Order matters here.
-  const tableRow = body.insert('div', ':first-child').attr('class', 'viz row');
   const plotRow = body.insert('div', ':first-child').attr('class', 'viz row');
   const controlsRow = body.insert('div', ':first-child').attr('class', 'viz row');
-  // whin the table row we have a table
-  const tableCol = tableRow.append('div')
-    .attr('class', 'col-xs-12 tableCol')
-    .style('max-width', '1000px')
-    .style('margin-top', '20px');
   // within controls row we have controls
   const controlsDiv = controlsRow.append('div')
     .attr('class', 'col-lg-12');
@@ -28,51 +22,6 @@ export default function init() {
   const legendCol = plotRow.append('div')
     .style('height', '470px')
     .attr('class', 'col-lg-2');
-  // within tableCol we have a table
-  const table = tableCol.append('div')
-    .attr('class', 'stats')
-    .append('table')
-    .attr('class', 'table table-hover table-bordered')
-    .style('margin-bottom', '10px');
-  const tableHead = table.append('thead');
-  const selectedRow = tableHead.append('tr');
-  selectedRow.append('th')
-    .attr('class', 'col-xs-2 tableSelected')
-    .text('Selected: None');
-  selectedRow.append('th')
-    .attr('class', 'col-xs-2 tableDepth')
-    .text('Depth: None');
-
-  tableHead.append('tr')
-    .attr('class', 'tableHead')
-    .selectAll('th')
-        .data([['Percentile', 2], ['Metric', 2]])
-      .enter()
-        .append('th')
-        .text(d => d[0])
-        .attr('class', d => `col-xs-${d[1]}`);
-  const initialData = [
-    ['2nd', '...'],
-    ['9th', '...'],
-    ['25th', '...'],
-    ['50th (Median)', '...'],
-    ['75th', '...'],
-    ['91st', '...'],
-    ['98th', '...'],
-  ];
-  const rows = table
-    .append('tbody')
-      .attr('class', 'tableBody')
-      .selectAll('tr')
-      .data(initialData)
-    .enter()
-      .append('tr');
-  rows
-    .selectAll('td')
-    .data(d => d)
-      .enter()
-    .append('td')
-    .text(d => d);
   // within plot col we have plot svg
   const plotSvg = plotCol.append('svg')
                     .attr('viewBox', '0 0 1120 470');
